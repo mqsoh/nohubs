@@ -1,0 +1,4 @@
+#!/bin/bash
+repo=$1
+cd /var/lib/git
+git clone --bare --shared $repo $(basename $repo .git)

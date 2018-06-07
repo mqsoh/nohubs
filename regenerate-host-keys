@@ -1,0 +1,16 @@
+#!/bin/bash
+rm /etc/ssh/ssh_host_*
+dpkg-reconfigure openssh-server
+
+echo
+echo
+echo
+echo These are the environment variables you need for the host keys.
+echo
+echo
+echo
+
+for file in /etc/ssh/ssh_host_*; do
+    var=$(echo $file | sed "s#/\|\.#_#g");
+    echo "$var=$(base64 -w 0 $file)";
+done

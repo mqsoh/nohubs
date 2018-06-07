@@ -1,0 +1,10 @@
+.---------------------.
+| Git / GitWeb Server |
+`---------------------'
+
+The git repositories are in /var/lib/git. But I made scripts to create a new
+repository or clone an existing one.
+
+    mkrepo mynewrepository
+    addrepo github.com/mqsoh/old-projects
+
