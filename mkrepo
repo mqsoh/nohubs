@@ -4,3 +4,4 @@ cd /var/lib/git
 mkdir -p $repo
 cd $repo
 git init --bare --shared
+touch git-daemon-export-ok

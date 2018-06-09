@@ -17,6 +17,7 @@ done
 
 service ssh start
 service apache2 start
+git daemon --listen=0.0.0.0 --reuseaddr --base-path=/var/lib/git/ /var/lib/git/ &
 
 echo
 echo sshd and apache2 are now running so you should be able to SSH in.
