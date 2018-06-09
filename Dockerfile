@@ -18,8 +18,8 @@ RUN a2enmod cgid
 RUN sed -i 's#DocumentRoot .\+#DocumentRoot /usr/share/gitweb#' /etc/apache2/sites-enabled/000-default.conf
 COPY ./files/mkrepo /bin/
 RUN chmod +x /bin/mkrepo
-COPY ./files/addrepo /bin/
-RUN chmod +x /bin/addrepo
+COPY ./files/fork /bin/
+RUN chmod +x /bin/fork
 WORKDIR /root
 RUN ln -sf /var/lib/git/ ./code
 

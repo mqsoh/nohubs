@@ -1,7 +1,9 @@
 #!/bin/bash
 repo=$1
+description=$2
 cd /git
 mkdir -p $repo
 cd $repo
 git init --bare --shared
 touch git-daemon-export-ok
+echo "$description" > description
