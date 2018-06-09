@@ -1,6 +1,6 @@
 #!/bin/bash
 repo=$1
-cd /var/lib/git
+cd /git
 git clone --bare --shared $repo $(basename $repo .git)
 cd $(basename $repo .git)
 touch git-daemon-export-ok

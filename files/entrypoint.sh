@@ -8,7 +8,7 @@
 # Another purpose is to start the sshd server and Apache (to server gitweb).
 
 mkdir -p /root/.ssh
-echo "$AUTHORIZED_KEYS" | base64 -d > /root/.ssh/authorized_keys
+echo "$AUTHORIZED_KEYS" | base64 -d > /authorized_keys
 
 for var in _etc_ssh_ssh_host_ecdsa_key _etc_ssh_ssh_host_ecdsa_key_pub _etc_ssh_ssh_host_ed25519_key _etc_ssh_ssh_host_ed25519_key_pub _etc_ssh_ssh_host_rsa_key _etc_ssh_ssh_host_rsa_key_pub; do
     fn=$(echo $var | sed 's/_pub$/.pub/; s#_etc_ssh_#/etc/ssh/#;')
@@ -17,7 +17,7 @@ done
 
 service ssh start
 service apache2 start
-git daemon --listen=0.0.0.0 --reuseaddr --base-path=/var/lib/git/ /var/lib/git/ &
+git daemon --listen=0.0.0.0 --reuseaddr --base-path=/git/ /git/ &
 
 echo
 echo sshd and apache2 are now running so you should be able to SSH in.

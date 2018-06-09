@@ -1,6 +1,6 @@
 #!/bin/bash
 repo=$1
-cd /var/lib/git
+cd /git
 mkdir -p $repo
 cd $repo
 git init --bare --shared
