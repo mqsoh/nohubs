@@ -4,6 +4,7 @@ RUN apt update && \
     apt install --assume-yes \
         openssh-server \
         gitweb \
+        highlight \
     && rm -rf /var/lib/apt/lists/*
 
 RUN adduser --home /git --disabled-password git
