@@ -47,7 +47,7 @@ echo
 echo TODO: Add documents and stuff.
 echo
 
-if test "$@" = ""; then
+if test $# -eq 0; then
     wait
 else
     "$@"

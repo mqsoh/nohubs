@@ -61,7 +61,7 @@ link:https://docs.hyper.sh/hyper/GettingStarted/index.html[Getting Started].
 
 . Run a container with the proper environment and published ports.
 
-    hyper run -d --name mynohubs --volume git:/git -p 22:22 -p 80:80 -p 9418:9418 -e SELF_HOSTED=true $(docker run -i --rm --entrypoint regenerate-host-keys mqsoh/nohubs) mqsoh/nohubs
+    hyper run -d --name mynohubs --volume git:/git -p 22:22 -p 80:80 -p 9418:9418 -e AUTHORIZED_KEYS="$(base64 -w 0 YOUR_PUBLIC_KEY)" -e SELF_HOSTED=true $(docker run -i --rm --entrypoint regenerate-host-keys mqsoh/nohubs) mqsoh/nohubs
 
 . Attach the IP address to the container.
 
