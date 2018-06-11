@@ -1,0 +1,77 @@
+Nohubs, a Git and GitWeb Docker image.
+--------------------------------------
+
+If you run this Docker image you will have a Git host with public, read-only
+access, SSH-authenticated push, and GitWeb -- an ugly and confusing front end.
+I created it to help me avoid using centralized hosting. There are no pull
+requests so this is only appropriate if, like me, you're not a part of a
+community or have other means of evaluating pull requests (like Gerrit or
+patches or something).
+
+You can SSH into it to create repos and fork repos from other sites. The
+instructions will be printed when you log in.
+
+You need to publish ports 22 (ssh), 80 (GitWeb), and 9418 (git daemon). For a
+persistent volume, mount it to "/git".
+
+Evironment variables:
+
+    SELF_HOSTED: Set this to "true" if you want to push GitWeb configuration to
+    an automatically-created "nohubs-site" repository.
+
+    AUTHORIZED_KEYS: A base64 encoded version of the public SSH keys you want
+    to have read/write access to both the host and the repositories. If it's
+    just you, it's this:
+
+        $ base64 -w 0 ~/.ssh/id_rsa.pub
+        c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFCQVFETlYybVlWZ3ZVQStWSDJhcFptNkRtUmpyczAzOU1WL1BMSFRNbm4yT3ZqVjRLQVdBTG1MYnN3SUxJTG9Hb0dRT0Yvb3ltUWdNMkc0alY0QzE0azhKY1ZyOTBRT0k5V1BUaTloRjR2RGdmSDl4Zk92UXVRcUtUWTJEald4eHV4cnhvWElxczd6cTBGZ3duY3YvOERiMlpRNjZMNmc0M1N4TzlyYm9HWk5kejhhMkhablhyd01NY3NPT1pMSU41SE5qbjV2b0xZVDdlT2h2QUw1TzdRQTBvSXVWWE1tcGswdGMrdk9QK3ZpTHNVc0tPTnB2U09FazZXOFgrb3NWWkE2aE1aaGowbENhQTRRWThULzlpNmhvVVVESEZsMEtpclBRcEE4T0RjbUZyYWRpMWgxbkV6V0p4SjFpN0RhU1Zod0lIeHJEb0xmaitpdCtJY1U5QXhnSkIgbWFzb25Ac3RhdWdsZXIubmV0Cg==
+
+    (host keys): These are 6 environment variables; the host keys for the SSH
+    server. You should generate them for yourself and keep them secret.
+    Otherwise, someone could masquerade as your Git server. If they're
+    accidentally exposed, just regenerate them and redeploy the site. You only
+    need to update your known_hosts. Use can generate the actual "docker run"
+    arguments like this:
+
+        $ docker run -i --rm --entrypoint regenerate-host-keys mqsoh/nohubs
+        --env _etc_ssh_ssh_host_ecdsa_key=...
+        --env _etc_ssh_ssh_host_ecdsa_key_pub=...
+        --env _etc_ssh_ssh_host_ed25519_key=...
+        --env _etc_ssh_ssh_host_ed25519_key_pub=...
+        --env _etc_ssh_ssh_host_rsa_key=...
+        --env _etc_ssh_ssh_host_rsa_key_pub=...
+
+
+
+Deploying to Hyper.sh
+---------------------
+
+I've never used this service until now. It's pretty simple! but I can't vouch
+for it or anything. They have a CLI client. Here's their
+link:https://docs.hyper.sh/hyper/GettingStarted/index.html[Getting Started].
+
+. Create an IP address:
+
+    hyper fip allocate 1
+
+. Create a volume:
+
+    $ hyper volume create --name=git --size=10
+    git
+
+. Run a container with the proper environment and published ports.
+
+    hyper run -d --name mynohubs --volume git:/git -p 22:22 -p 80:80 -p 9418:9418 -e SELF_HOSTED=true $(docker run -i --rm --entrypoint regenerate-host-keys mqsoh/nohubs) mqsoh/nohubs
+
+. Attach the IP address to the container.
+
+    $ hyper fip attach <ip address; find it with hyper fip ls> mynohubs
+
+Now you have an instance running. You can
+
+* See it on the web: http://your-ip
+* SSH into it to create/fork repos: ssh git@your-ip
+* Clone your repos with: git clone git@your-ip:your-repo
+* Public read-only cloning with: git clong git://your-ip:your-repo
+
+Also, set up an A record in your DNS for a real host name.
